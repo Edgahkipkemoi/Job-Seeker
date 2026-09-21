@@ -206,7 +206,15 @@ on GitHub's servers on the same twice-daily schedule, free, with nothing to depl
 
 ### Setup
 
-1. Create a repository on GitHub and push this folder to it.
+1. Create an **empty** repository at <https://github.com/new> — no README, no
+   .gitignore, no licence — then run:
+
+   ```bash
+   ./deploy_github.sh https://github.com/<you>/<repo>.git
+   ```
+
+   It pushes the project, refuses to run if `.env` is not gitignored, and prints
+   the exact secret names and values to paste in the next step.
 2. In the repo: **Settings → Secrets and variables → Actions → New repository secret**.
    Add the ones for your channel:
 
@@ -249,7 +257,9 @@ config.yaml              profile, keywords, sources, thresholds  ← tune this
 .env                     SMTP credentials and API keys           ← secrets, never commit
 run.py                   CLI entry point
 setup.sh                 one-time environment setup
-install_cron.sh          installs the 07:00 daily schedule
+install_cron.sh          installs the daily schedule from config.yaml
+deploy_github.sh         pushes to GitHub and prints the secrets to add
+.github/workflows/       GitHub Actions schedule (runs without your PC on)
 jobseeker/
   models.py              Job dataclass, fingerprinting, text cleaning
   config.py              YAML + .env loading
