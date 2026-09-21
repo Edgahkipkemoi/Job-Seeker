@@ -191,8 +191,54 @@ tail -f logs/cron.log                                   # watch the next run
 crontab -l | grep -v job-seeker-daily-digest | crontab - # remove it
 ```
 
-**The machine must be powered on at 07:00 for cron to fire.** On a laptop that sleeps
-overnight, either install `anacron`, or run this on a small always-on VPS.
+**The machine must be powered on at both times for cron to fire.** If it sleeps
+overnight, use the GitHub Actions schedule below instead — it needs no machine
+of your own.
+
+---
+
+## Running it on GitHub Actions (no machine of your own)
+
+Pushing to GitHub does **not** by itself make anything run — GitHub stores code, it
+doesn't execute it. But the included workflow at
+[`.github/workflows/job-digest.yml`](.github/workflows/job-digest.yml) runs the search
+on GitHub's servers on the same twice-daily schedule, free, with nothing to deploy.
+
+### Setup
+
+1. Create a repository on GitHub and push this folder to it.
+2. In the repo: **Settings → Secrets and variables → Actions → New repository secret**.
+   Add the ones for your channel:
+
+   | Secret | Value |
+   |---|---|
+   | `TELEGRAM_BOT_TOKEN` | the token from @BotFather |
+   | `TELEGRAM_CHAT_ID` | the id saved in your local `.env` |
+
+   Email or Discord instead? Add `SMTP_HOST`, `SMTP_USER`, `SMTP_PASSWORD`,
+   `MAIL_FROM`, `MAIL_TO`, or `DISCORD_WEBHOOK_URL`.
+3. Open the **Actions** tab and run **Job Digest** once by hand to confirm it works.
+
+`.env` is gitignored and never leaves your machine — Actions reads the secrets instead.
+
+### Things worth knowing
+
+- **Times are UTC in the workflow.** GitHub cron ignores `schedule.timezone`. Kenya is
+  UTC+3 year-round, so the workflow uses `04:00` and `18:25` UTC. If you change
+  `schedule.times` in `config.yaml`, update the workflow's `cron:` lines too — subtract
+  three hours.
+- **`data/seen.db` is committed back after every run.** The runner is wiped between
+  jobs, so without this you would be sent the same vacancies twice a day forever. The
+  workflow commits with the built-in token, which by design does not re-trigger
+  workflows, so there is no loop.
+- **`digest.html` is committed too**, so you can read the latest digest straight from
+  the repo. Each run also uploads it as a downloadable artifact for 14 days.
+- **Scheduled runs can be late.** GitHub delays schedules under load, sometimes by
+  30+ minutes. It is not a precise alarm clock.
+- **GitHub disables scheduled workflows after ~60 days of repository inactivity.**
+  You get an email and can re-enable in one click.
+- **Cost:** public repos run Actions free. Private repos get 2,000 minutes/month free;
+  at roughly 3 minutes a run, twice daily, this uses about 180.
 
 ---
 
