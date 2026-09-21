@@ -1,0 +1,12 @@
+# Secrets — never commit. On GitHub Actions these come from repo Secrets instead.
+.env
+
+.venv/
+__pycache__/
+*.pyc
+
+# Run logs are noise in a repo, but the digest and the de-duplication database
+# are deliberately committed: GitHub Actions wipes the runner after every job,
+# so seen.db is the only thing stopping you being sent the same vacancy twice.
+logs/
+!data/seen.db

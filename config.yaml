@@ -1,0 +1,237 @@
+# ============================================================
+#  Job Seeker — profile & search configuration
+#  Edit this file to re-tune what gets emailed to you.
+# ============================================================
+
+profile:
+  name: "Edgah Kipkemoi"
+  location: "Nairobi, Kenya"
+  years_experience: 2
+
+# Keywords are scored. A job's relevance = sum of weights of the
+# keywords found in its title (x2) and description (x1).
+keywords:
+  must_any:            # a job must match at least ONE of these or it is dropped
+    - software developer
+    - software engineer
+    - backend
+    - back-end
+    - full stack
+    - fullstack
+    - frontend
+    - front-end
+    - web developer
+    - elixir
+    - phoenix
+    - react
+    - next.js
+    - nextjs
+    - node.js
+    - nodejs
+    - typescript
+    - javascript
+    - devops
+    - network engineer
+    - network administrator
+    - mikrotik
+    - systems administrator
+    - sysadmin
+    - technical support
+    - support engineer
+    - it officer
+    - ict officer
+    - ict assistant
+    - ict manager
+    - noc
+    - isp
+
+  weighted:            # keyword: weight
+    elixir: 10
+    phoenix: 8
+    mikrotik: 10
+    routeros: 9
+    bgp: 8
+    ospf: 7
+    mpls: 6
+    isp: 7
+    noc: 6
+    next.js: 7
+    nextjs: 7
+    react: 6
+    typescript: 6
+    node.js: 5
+    nodejs: 5
+    javascript: 4
+    postgresql: 5
+    mysql: 3
+    graphql: 4
+    rest api: 3
+    docker: 5
+    ci/cd: 4
+    github actions: 4
+    jenkins: 3
+    linux: 4
+    cloudflare: 4
+    wireguard: 4
+    vpn: 3
+    firewall: 3
+    full stack: 6
+    fullstack: 6
+    backend: 5
+    frontend: 4
+    software engineer: 6
+    software developer: 6
+    devops: 5
+    ict officer: 6
+    ict assistant: 5
+    technical support: 4
+    network engineer: 7
+    sre: 5
+    kenya: 6
+    nairobi: 6
+    remote: 4
+
+  # Any of these in the TITLE drops the job (wrong seniority / wrong field)
+  exclude:
+    - sales
+    - marketing
+    - intern only
+    - internship
+    - teacher
+    - nurse
+    - driver
+    - cleaner
+    - security guard
+    - accountant
+    - "head of "
+    - "director of "
+    - "chief "
+    - vp of
+    - principal engineer
+    - staff engineer
+    - "10+ years"
+
+search:
+  # Free-text queries pushed to the searchable job APIs
+  queries:
+    - software developer Kenya
+    - software engineer Nairobi
+    - backend developer Kenya
+    - full stack developer Kenya
+    - elixir developer
+    - react next.js developer remote
+    - network engineer Kenya
+    - technical support engineer remote
+    - devops engineer Kenya
+  countries: ["ke"]          # Adzuna country codes
+  max_age_days: 14           # ignore postings older than this
+  min_score: 8               # relevance cut-off for remote/international roles
+  local_min_score: 4         # lower bar for Kenya-based roles (they are scarcer)
+  max_per_section: 40        # cap each email section (Kenya / remote / government)
+
+# Kenyan Government ministries, parastatals & public-service boards.
+# Every open public-sector vacancy found here is reported in its own email
+# section regardless of keyword score.
+government:
+  enabled: true
+  min_score: 0               # 0 = report ALL government vacancies found
+  # NOTE: the Kenyan aggregator feeds (MyJobMag, JobWebKenya, Career Point)
+  # are pulled under `boards.rss` below. Their public-sector adverts are moved
+  # into this section automatically by the classifier in jobseeker/sources/gov.py,
+  # so they must NOT be listed here or the whole feed would be mislabelled.
+  rss: []
+  html:
+    - name: "MyGov Kenya (Government Advertiser)"
+      url: "https://www.mygov.go.ke/"
+      link_contains: ["vacanc", "advert", "recruit", "job", ".pdf"]
+    - name: "Public Service Commission (PSC) Kenya"
+      url: "https://www.publicservice.go.ke/index.php/vacancies"
+      link_contains: ["vacanc", "advert", "recruit", ".pdf"]
+    - name: "PSC Jobs Portal"
+      url: "https://www.psckjobs.go.ke/"
+      link_contains: ["job", "vacanc", "advert"]
+    - name: "Kenya Revenue Authority"
+      url: "https://www.kra.go.ke/careers"
+      link_contains: ["career", "vacanc", "job"]
+    - name: "Communications Authority of Kenya"
+      url: "https://www.ca.go.ke/careers"
+      link_contains: ["career", "vacanc", "advert"]
+    - name: "Central Bank of Kenya"
+      url: "https://www.centralbank.go.ke/vacancies/"
+      link_contains: ["career", "vacanc", "advert", ".pdf"]
+    - name: "Kenyatta National Hospital"
+      url: "https://knh.or.ke/index.php/careers/"
+      link_contains: ["career", "vacanc", "job"]
+    - name: "Safaricom Careers"
+      url: "https://www.safaricom.co.ke/careers"
+      link_contains: ["career", "job", "vacanc"]
+    - name: "Kenya National Highways Authority (KeNHA)"
+      url: "https://www.kenha.co.ke/index.php/careers/"
+      link_contains: ["career", "vacanc", "advert", ".pdf"]
+  # Google News RSS sweeps — catch ministry adverts announced in the press
+  news_queries:
+    - '"ministry of" Kenya vacancies advertisement'
+    - "Kenya parastatal jobs advertised ICT"
+    - "Public Service Commission Kenya jobs advertised"
+    - "State Corporation Kenya vacancies ICT officer"
+    - "county government Kenya ICT officer vacancy"
+
+# General job boards (remote + Kenya)
+boards:
+  remotive: true
+  remoteok: true
+  arbeitnow: true
+  jobicy: true
+  himalayas: true
+  adzuna: true        # needs ADZUNA_APP_ID / ADZUNA_APP_KEY in .env
+  rss:
+    - name: "MyJobMag Kenya"
+      url: "https://www.myjobmag.co.ke/jobsxml.xml"
+    - name: "JobWebKenya"
+      url: "https://jobwebkenya.com/feed/"
+    - name: "Career Point Kenya"
+      url: "https://www.careerpointkenya.co.ke/feed/"
+    - name: "WeWorkRemotely — Programming"
+      url: "https://weworkremotely.com/categories/remote-programming-jobs.rss"
+    - name: "WeWorkRemotely — DevOps/SysAdmin"
+      url: "https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss"
+  html:
+    - name: "BrighterMonday Kenya — Software & Data"
+      url: "https://www.brightermonday.co.ke/jobs/software-data"
+      link_contains: ["/listings/"]
+    - name: "BrighterMonday Kenya — IT & Telecoms"
+      url: "https://www.brightermonday.co.ke/jobs/it-telecoms"
+      link_contains: ["/listings/"]
+    - name: "BrighterMonday Kenya — Engineering & Technology"
+      url: "https://www.brightermonday.co.ke/jobs/engineering-technology"
+      link_contains: ["/listings/"]
+
+# How the digest reaches you. List one or more; each needs its own
+# credentials in .env. Channels without credentials are skipped with a
+# message rather than failing the run.
+#   local    — writes digest.html in this folder. Needs NOTHING: no account,
+#              no token, no sign-up. Works right now. Add it to any other
+#              channel as a safety net.
+#   telegram — bot message to your phone. One value to paste (the bot token);
+#              the chat id finds itself on first send.
+#   email    — any SMTP provider (Brevo, Resend, Gmail, Zoho, SMTP2GO...)
+#   discord  — incoming webhook to a channel you own
+delivery:
+  channels: ["local", "telegram"]
+
+# When the digest runs. install_cron.sh reads these and writes one crontab
+# entry per time, so changing the schedule means editing this list and
+# re-running ./install_cron.sh — nothing else.
+schedule:
+  timezone: "Africa/Nairobi"
+  times:
+    - "07:00"
+    - "21:25"
+
+runtime:
+  timeout_seconds: 25
+  retries: 2
+  user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36"
+  database: "data/seen.db"
+  remember_days: 45        # don't re-send a job seen in the last N days
+  send_even_if_empty: true # still email a "nothing new today" note
